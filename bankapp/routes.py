@@ -4,6 +4,10 @@ from bankapp.database import users
 from bankapp import app
 
 
+@app.route('/')
+def home_page():
+    return 'This is a bank account app!'
+
 # http://127.0.0.1:5000/balance?pin=1234&user=user2
 # try to play with the above mentioned url :)
 @app.route('/balance')
