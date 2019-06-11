@@ -1,6 +1,6 @@
 from flask import request
 
-from bankapp.database import users
+from bankapp.models import User
 from bankapp import app
 
 
