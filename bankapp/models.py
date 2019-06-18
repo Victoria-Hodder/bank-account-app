@@ -7,3 +7,6 @@ class User(db.Model):
     name = db.Column(db.String(10), unique=True)
     pin = db.Column(db.String(4), nullable=False) #nullable means there cannot be nothing
     balance = db.Column(db.Integer)
+
+    def __repr__(self):
+        return f"User(name='{self.name}', pin='{self.pin}', balance='{self.balance}')"
