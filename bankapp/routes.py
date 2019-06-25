@@ -7,47 +7,116 @@ from bankapp import app, db
 def home_page():
     return 'This is a bank account app!'
 
-# http://127.0.0.1:5000/balance?pin=1234&user_name=John Brown
+# http://127.0.0.1:5000/balance?pin=5594&user_name=John%20Brown
 @app.route('/balance')
 def display_balance():
-    pin_number = request.args.get('pin') # instead of writing a pin as argument, we use this line of code. why?
-    user_name = request.args.get('user_name') # instead of writing a pin as argument, we use this line of code. why?
+    pin_number = request.args.get('pin')
+    user_name = request.args.get('user_name')
+
     searchedUser = User.query.filter_by(name=user_name).first()
 
-    if pin_number == searchedUser.pin:
-        return 'This is your current balance: {} EUR'.format(searchedUser.balance)
+    if searchedUser: 
+        if pin_number == searchedUser.pin:
+            return 'This is your current balance: {} EUR'.format(searchedUser.balance)
+        else:
+            return pin_error()
     else:
-        return pin_error()
+        return "User does not exist"
+
+
 
 def pin_error():
     return 'Access denied: incorrect PIN.'
 
-# http://127.0.0.1:5000/withdraw?pin=1234&user=user1&amount=50
+
+# http://127.0.0.1:5000/withdraw?pin=5594&user_name=John%20Brown&amount=50
+
 @app.route('/withdraw')
 def withdraw_money():
-    pin_number = request.args.get('pin') # instead of writing a pin as argument, we use this line of code. why?
-    user_name = request.args.get('user') # instead of writing a pin as argument, we use this line of code. why?
-    amount = request.args.get('amount') # instead of writing a pin as argument, we use this line of code. why?
-    amount = int(amount) # why does this have to be transformed into integer?
+    pin_number = request.args.get('pin')
+    user_name = request.args.get('user_name')
+    amount = int(request.args.get('amount'))
 
-    balance = users[user_name][1]
-    if pin_number == users[user_name][0]:
-        if amount <= balance:
-            balance = balance - amount
-            return 'Withdrew {} EUR. New balance is: {} EUR.'.format(amount, balance)
+    searchedUser = User.query.filter_by(name=user_name).first()    
+
+    if searchedUser: 
+
+        balance = searchedUser.balance 
+
+        if pin_number == searchedUser.pin:
+            
+            if amount <= balance:
+                searchedUser.balance -= amount
+                db.session.commit()
+                return 'Withdrew {} EUR. New balance is: {} EUR.'.format(amount, searchedUser.balance)        
+            else:
+                return 'You are not allowed to withdraw more money than you have on your account!'
+        
+            if amount <= 2000:
+                balance -= amount
+                db.session.commit()
+                return 'Withdrew {} EUR. New balance is: {} EUR.'.format(amount, searchedUser.balance)
+            else:
+                return 'You are not allowed to go over 2000 euro daily limit'
+
         else:
-            return 'You are not allowed to withdraw more money than you have on your account!'
+            return pin_error()
+
+    else: 
+        return "User does not exist"
+
+
+# http://127.0.0.1:5000/deposit?pin=5594&user_name=John%20Brown&amount=50
+@app.route('/deposit')
+def display_deposit():
+    pin_number = request.args.get('pin')
+    user_name = request.args.get('user_name')
+    amount = int(request.args.get('amount'))
+    
+    searchedUser = User.query.filter_by(name=user_name).first()
+
+    if searchedUser:
+        balance = searchedUser.balance 
+
+        if pin_number == searchedUser.pin:
+            if amount <= 3000:
+                searchedUser.balance += amount
+                db.session.commit()
+                return 'Deposited {} EUR. New balance is: {} EUR.'.format(amount, searchedUser.balance)        
+            else:
+                return 'You can not deposit money more than the 3000 Euro daily limit'
+        else:
+            return pin_error()
+
     else:
-        return pin_error()
+        return 'User does not exist'
 
 
-#    if current_user.is_authenticated:
- #       return redirect(url_for('home'))
-  #  form = LoginForm()
-   # if form.validate_on_submit():
-    #    user = User.query.filter_by(email=form.email.data).first()        
-        
-        
-#return jsonify(d) - where should I put this?
-#return jsonify({'restaurants': restaurants})
-#return jsonify({'users': user.name})
+# http://127.0.0.1:5000/transfer?pin=3412&sender=Peppa%20Potts&receiver=John%20Brown&amount=50
+@app.route('/transfer')
+def display_transfer():
+    pin_number = request.args.get('pin')
+    sender = request.args.get('sender')
+    receiver = request.args.get('receiver')
+    amount = int(request.args.get('amount'))
+
+    
+    searchedSender = User.query.filter_by(name=sender).first()
+    searchedReceiver = User.query.filter_by(name=receiver).first()
+
+    if searchedSender and searchedReceiver:
+        senderBalance = searchedSender.balance 
+        receiverBalance = searchedReceiver.balance
+
+        if pin_number == searchedSender.pin:
+            if amount <= 3000:
+                searchedSender.balance -= amount
+                searchedReceiver.balance += amount
+                db.session.commit()
+                return "Your transfer is complete!"
+            else:
+                return 'You can not transfer money more than the 3000 Euro daily limit'
+        else:
+            return pin_error()
+    else:
+        return 'Sender or Receiver does not exist'
