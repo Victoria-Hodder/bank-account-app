@@ -1,6 +1,6 @@
-from flask import request, jsonify
-
+from flask import request, jsonify, abort
 from bankapp.models import User
+from bankapp.schemas import UserSchema
 from bankapp import app, db
 
 @app.route('/')
@@ -99,7 +99,6 @@ def display_transfer():
     sender = request.args.get('sender')
     receiver = request.args.get('receiver')
     amount = int(request.args.get('amount'))
-
     
     searchedSender = User.query.filter_by(name=sender).first()
     searchedReceiver = User.query.filter_by(name=receiver).first()
@@ -120,3 +119,33 @@ def display_transfer():
             return pin_error()
     else:
         return 'Sender or Receiver does not exist'
+
+@app.route('/users', methods= ['GET'])
+def get_users():
+    user_schema = UserSchema(many=True)
+    users = User.query.all()
+    response = user_schema.dump(users).data
+    return jsonify(response)
+
+@app.route('/users', methods=['POST'])
+def create_user():
+    data = request.get_json()
+    new_name = data ['name']
+    new_pin = int(data['pin'])
+    new_balance = int(data['balance'])
+
+    if not new_name and new_balance and new_pin:
+        abort(400, description="Bad request!")
+    else:
+        # check user exists
+        user = User.query.filter_by(name=new_name).first()
+        if user:
+            abort(400, description="Oops user already exists")
+        else:
+            new_user = User(name=new_name, pin=new_pin, balance=new_balance)
+            db.session.add(new_user)
+            db.session.commit()
+            #to serialize we use Marshmallow library
+            user_schema = UserSchema()
+            response = user_schema.dump(new_user).data
+            return jsonify(response)
