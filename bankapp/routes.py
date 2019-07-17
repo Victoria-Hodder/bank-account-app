@@ -145,7 +145,43 @@ def create_user():
             new_user = User(name=new_name, pin=new_pin, balance=new_balance)
             db.session.add(new_user)
             db.session.commit()
-            #to serialize we use Marshmallow library
+            #we use Marshmallow library to serialize
             user_schema = UserSchema()
             response = user_schema.dump(new_user).data
             return jsonify(response)
+
+@app.route('/users/<int:user_id>', methods=['GET']) #GET is default
+def get_user(user_id):
+    user = User.query.get_or_404(user_id, "You do not exist, please try again")
+    user_schema = UserSchema()
+    response = user_schema.dump(user).data
+    return jsonify(response)
+
+#update resource details
+#PUT /users {'name' = 'James'}
+@app.route('/users/<int:user_id>', methods= ['PUT'])
+def update_user(user_id):
+    data = request.get_json()
+    new_name = data['name']
+    new_pin = data['pin']
+    new_balance = data['balance']
+    user = User.query.get_or_404(user_id)
+    user.name = new_name
+    user.pin = new_pin
+    user.balance = new_balance
+    db.session.commit()
+    user_schema = UserSchema()
+    response = user_schema.dump(user).data
+    return jsonify(response)
+
+
+#delete resource which I selected
+#DELETE /users/1
+@app.route('/users/<int:user_id>', methods=['DELETE'])
+def delete_user(user_id):
+    user = User.query.get_or_404(user_id, "You do not exist, please try again")
+    db.session.delete(user)
+    db.session.commit()
+    return '', 204
+
+#ddos attack
