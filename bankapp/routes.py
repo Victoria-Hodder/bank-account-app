@@ -58,7 +58,6 @@ def withdraw_money(user_id):
     else: 
         return "User does not exist"
 
-
 # http://127.0.0.1:5000/deposit?pin=5594&user_name=John%20Brown&amount=50
 @app.route('/deposit')
 def display_deposit():

@@ -58,6 +58,11 @@ class TestRoutes(unittest.TestCase):
         #Did it delete from DB too?
         user = self.get_user_by_id(mock_user.id)
         self.assertIsNone(user)
+    
+    def test_delete_users_by_id_404(self):
+        mock_user = self.create_user()
+        response = self.app.get(f'/users/{mock_user.id+1}')
+        self.assertEqual(response.status_code,404)
 
     def test_get_users_by_id_404(self):
         mock_user = self.create_user()
