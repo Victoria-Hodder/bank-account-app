@@ -12,7 +12,6 @@ def home_page():
 def display_balance():
     pin_number = request.args.get('pin')
     user_name = request.args.get('user_name')
-
     searchedUser = User.query.filter_by(name=user_name).first()
 
     if searchedUser: 
@@ -24,27 +23,23 @@ def display_balance():
         return "User does not exist"
 
 
-
 def pin_error():
     return 'Access denied: incorrect PIN.'
 
 
-# http://127.0.0.1:5000/withdraw?pin=5594&user_name=John%20Brown&amount=50
+# http://127.0.0.1:5000/users/:user_id/withdraw
 
-@app.route('/withdraw')
-def withdraw_money():
-    pin_number = request.args.get('pin')
-    user_name = request.args.get('user_name')
-    amount = int(request.args.get('amount'))
-
+@app.route('/users/<int:user_id>/withdraw', methods = ['PATCH'])
+def withdraw_money(user_id):
+    data = request.get_json(force=True)
+    amount = data['amount']
+    pin = data['pin']
+    
     searchedUser = User.query.filter_by(name=user_name).first()    
 
     if searchedUser: 
-
         balance = searchedUser.balance 
-
         if pin_number == searchedUser.pin:
-            
             if amount <= balance:
                 searchedUser.balance -= amount
                 db.session.commit()
@@ -58,10 +53,8 @@ def withdraw_money():
                 return 'Withdrew {} EUR. New balance is: {} EUR.'.format(amount, searchedUser.balance)
             else:
                 return 'You are not allowed to go over 2000 euro daily limit'
-
         else:
             return pin_error()
-
     else: 
         return "User does not exist"
 
@@ -129,7 +122,7 @@ def get_users():
 
 @app.route('/users', methods=['POST'])
 def create_user():
-    data = request.get_json()
+    data = request.get_json(force=True)
     new_name = data ['name']
     new_pin = int(data['pin'])
     new_balance = int(data['balance'])
