@@ -1,7 +1,17 @@
 from flask import request, jsonify, abort
-from bankapp.models import User
-from bankapp.schemas import UserSchema
+#from jsonschema import validate
 from bankapp import app, db
+from bankapp.models import User, Account
+from bankapp.schemas import UserSchema, AccountSchema
+
+user_request_schema = {
+    "type": "object",
+    "properties": {"name": {"type": "string"}, "pin": {"type": "number"}},
+}
+account_request_schema = {
+    "type": "object",
+    "properties": {"balance": {"type": "number"}, "ownerId": {"type": "number"}},
+}
 
 @app.route('/')
 def home_page():
@@ -27,36 +37,34 @@ def pin_error():
     return 'Access denied: incorrect PIN.'
 
 
-# http://127.0.0.1:5000/users/:user_id/withdraw
+# http://127.0.0.1:5000/users/1/accounts/1/withdraw
 
-@app.route('/users/<int:user_id>/withdraw', methods = ['PATCH'])
-def withdraw_money(user_id):
+@app.route("/users/<int:user_id>/accounts/<int:account_id>/withdraw", methods=["POST"])
+def withdraw(user_id, account_id):
     data = request.get_json(force=True)
-    amount = data['amount']
-    pin = data['pin']
-    
-    searchedUser = User.query.filter_by(name=user_name).first()    
-
-    if searchedUser: 
-        balance = searchedUser.balance 
-        if pin_number == searchedUser.pin:
-            if amount <= balance:
-                searchedUser.balance -= amount
+    amount = data["amount"]
+    pin_number = data["pin"]
+    if amount > 2000:
+        abort(
+            400, description="You are not allowed to go over 2000 euro daily limit"
+        )
+    else:
+        user = User.query.get_or_404(user_id, "User does not exist")
+        if pin_number == user.pin:
+            account = Account.query.get_or_404(account_id, "Account does not exist")
+            if amount <= account.balance:
+                account.balance -= amount
                 db.session.commit()
-                return 'Withdrew {} EUR. New balance is: {} EUR.'.format(amount, searchedUser.balance)        
+                account_schema = AccountSchema()
+                response = account_schema.dump(account).data
+                return jsonify(response)
             else:
-                return 'You are not allowed to withdraw more money than you have on your account!'
-        
-            if amount <= 2000:
-                balance -= amount
-                db.session.commit()
-                return 'Withdrew {} EUR. New balance is: {} EUR.'.format(amount, searchedUser.balance)
-            else:
-                return 'You are not allowed to go over 2000 euro daily limit'
+                abort(
+                    400,
+                    description="You are not allowed to withdraw more money than you have on your account!",
+                )
         else:
-            return pin_error()
-    else: 
-        return "User does not exist"
+            abort(400, description="Pin is not correct")
 
 # http://127.0.0.1:5000/deposit?pin=5594&user_name=John%20Brown&amount=50
 @app.route('/deposit')
