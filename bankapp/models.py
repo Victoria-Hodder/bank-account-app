@@ -3,19 +3,9 @@ from bankapp import db
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(10), unique=True, nullable=False)
-    pin = db.Column(db.Integer, nullable=False)
-    #created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    account = db.relationship('Account', backref='owner',lazy=True)
-
-    def __repr__(self):
-        return f"User(name='{self.name}', pin='{self.pin}')"
-
-class Account(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(10), unique=True)
+    pin = db.Column(db.String(4), nullable=False)
     balance = db.Column(db.Integer)
-    #created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    owner_id = db.Column(db.Integer(), db.ForeignKey('user.id'), nullable=False)
 
     def __repr__(self):
-        return f"Account(balance='{self.balance}', owner='{self.owner_id}')"
+        return f"User(name='{self.name}', pin='{self.pin}', balance='{self.balance}')"

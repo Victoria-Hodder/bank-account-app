@@ -1,17 +1,7 @@
 from flask import request, jsonify, abort
-#from jsonschema import validate
 from bankapp import app, db
-from bankapp.models import User, Account
-from bankapp.schemas import UserSchema, AccountSchema
-
-user_request_schema = {
-    "type": "object",
-    "properties": {"name": {"type": "string"}, "pin": {"type": "number"}},
-}
-account_request_schema = {
-    "type": "object",
-    "properties": {"balance": {"type": "number"}, "ownerId": {"type": "number"}},
-}
+from bankapp.models import User
+from bankapp.schemas import UserSchema
 
 @app.route('/')
 def home_page():
@@ -37,27 +27,24 @@ def pin_error():
     return 'Access denied: incorrect PIN.'
 
 
-# http://127.0.0.1:5000/users/1/accounts/1/withdraw
+# http://127.0.0.1:5000/users/1/withdraw
 
-@app.route("/users/<int:user_id>/accounts/<int:account_id>/withdraw", methods=["POST"])
-def withdraw(user_id, account_id):
+@app.route('/users/<int:user_id>/withdraw', methods=['PATCH'])
+def withdraw(user_id):
     data = request.get_json(force=True)
-    amount = data["amount"]
-    pin_number = data["pin"]
+    amount = data['amount']
+    pin = data['pin']
     if amount > 2000:
-        abort(
-            400, description="You are not allowed to go over 2000 euro daily limit"
-        )
+        abort(400, description='You are not allowed to go over 2000 euro daily limit') 
     else:
-        user = User.query.get_or_404(user_id, "User does not exist")
-        if pin_number == user.pin:
-            account = Account.query.get_or_404(account_id, "Account does not exist")
-            if amount <= account.balance:
-                account.balance -= amount
+        user = User.query.get_or_404(user_id, "User does nor exist")
+        if pin == user.pin: 
+            if amount <= user.balance:
+                user.balance -= amount
                 db.session.commit()
-                account_schema = AccountSchema()
-                response = account_schema.dump(account).data
-                return jsonify(response)
+                user_schema = UserSchema()
+                response = user_schema.dump(user).data
+                return jsonify(response)       
             else:
                 abort(
                     400,
@@ -66,59 +53,49 @@ def withdraw(user_id, account_id):
         else:
             abort(400, description="Pin is not correct")
 
-# http://127.0.0.1:5000/deposit?pin=5594&user_name=John%20Brown&amount=50
-@app.route('/deposit')
-def display_deposit():
-    pin_number = request.args.get('pin')
-    user_name = request.args.get('user_name')
-    amount = int(request.args.get('amount'))
-    
-    searchedUser = User.query.filter_by(name=user_name).first()
 
-    if searchedUser:
-        balance = searchedUser.balance 
-
-        if pin_number == searchedUser.pin:
-            if amount <= 3000:
-                searchedUser.balance += amount
-                db.session.commit()
-                return 'Deposited {} EUR. New balance is: {} EUR.'.format(amount, searchedUser.balance)        
-            else:
-                return 'You can not deposit money more than the 3000 Euro daily limit'
-        else:
-            return pin_error()
-
+@app.route('/users/<int:user_id>/deposit', methods=['PATCH'])
+def deposit(user_id):
+    data = request.get_json(force=True)
+    amount = data['amount']
+    pin = data['pin']
+    if amount >= 3000:
+        abort(400, description='You are not allowed to go over 3000 euro daily limit') 
     else:
-        return 'User does not exist'
-
-
-# http://127.0.0.1:5000/transfer?pin=3412&sender=Peppa%20Potts&receiver=John%20Brown&amount=50
-@app.route('/transfer')
-def display_transfer():
-    pin_number = request.args.get('pin')
-    sender = request.args.get('sender')
-    receiver = request.args.get('receiver')
-    amount = int(request.args.get('amount'))
-    
-    searchedSender = User.query.filter_by(name=sender).first()
-    searchedReceiver = User.query.filter_by(name=receiver).first()
-
-    if searchedSender and searchedReceiver:
-        senderBalance = searchedSender.balance 
-        receiverBalance = searchedReceiver.balance
-
-        if pin_number == searchedSender.pin:
-            if amount <= 3000:
-                searchedSender.balance -= amount
-                searchedReceiver.balance += amount
-                db.session.commit()
-                return "Your transfer is complete!"
-            else:
-                return 'You can not transfer money more than the 3000 Euro daily limit'
+        user = User.query.get_or_404(user_id, "User does not exist")
+        if pin == user.pin:
+            user.balance += amount
+            db.session.commit()
+            user_schema = UserSchema()
+            response = user_schema.dump(user).data
+            return jsonify(response)   
         else:
-            return pin_error()
+            abort(400, description="Pin is not correct")
+
+
+@app.route('/users/<int:user_id>/transfer', methods=['PATCH'])
+def transfer(user_id):
+    data = request.get_json(force=True)
+    amount = data["amount"]
+    pin_number = data["pin"]
+    receiver_id = data["receiverId"]
+    if amount >= 3000:
+        abort(400, description='You are not allowed to go over 3000 euro daily limit') 
     else:
-        return 'Sender or Receiver does not exist'
+        sender = User.query.get_or_404(user_id, "Sender does not exist")
+        if pin_number == sender.pin:
+            if amount <= sender.balance:
+                receiver = User.query.get_or_404(receiver_id, "Receiver user does not exist")
+                sender.balance -= amount
+                receiver.balance += amount
+                db.session.commit()
+                user_schema = UserSchema()
+                response = user_schema.dump(receiver).data
+                return jsonify(response)
+            else:
+                abort(400, description='You dont have enought amount of money in your acount!')
+        else:
+            abort(400, description="Pin is not correct")
 
 @app.route('/users', methods= ['GET'])
 def get_users():
@@ -183,5 +160,3 @@ def delete_user(user_id):
     db.session.delete(user)
     db.session.commit()
     return '', 204
-
-#ddos attack

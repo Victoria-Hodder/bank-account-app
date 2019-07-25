@@ -1,4 +1,4 @@
-from flask import Flask, make_response, jsonify, Blueprint
+from flask import Flask, Blueprint
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 

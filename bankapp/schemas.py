@@ -1,10 +1,6 @@
 from bankapp import ma
-from bankapp.models import User, Account
+from bankapp.models import User
 
 class UserSchema(ma.ModelSchema):
     class Meta:
         model = User
-
-class AccountSchema(ma.ModelSchema):
-    class Meta:
-        model = Account
