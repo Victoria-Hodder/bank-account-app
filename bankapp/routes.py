@@ -37,7 +37,7 @@ def withdraw(user_id):
     if amount > 2000:
         abort(400, description='You are not allowed to go over 2000 euro daily limit') 
     else:
-        user = User.query.get_or_404(user_id, "User does nor exist")
+        user = User.query.get_or_404(user_id, "User does not exist")
         if pin == user.pin: 
             if amount <= user.balance:
                 user.balance -= amount
