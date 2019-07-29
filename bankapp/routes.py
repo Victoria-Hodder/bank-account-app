@@ -138,7 +138,7 @@ def get_user(user_id):
 #PUT /users {'name' = 'James'}
 @app.route('/users/<int:user_id>', methods= ['PUT'])
 def update_user(user_id):
-    data = request.get_json()
+    data = request.get_json(force=True)
     new_name = data['name']
     new_pin = data['pin']
     new_balance = data['balance']

@@ -71,19 +71,19 @@ class TestRoutes(unittest.TestCase):
         response = self.app.get(f'/users/{mock_user.id+1}')
         self.assertEqual(response.status_code,404)
 
-    # def test_update_user(self):
-    #     mock_user = self.create_user()
-    #     mock_update_data = {
-    #         'name': "Guinea Pig",
-    #         'pin': '1234',
-    #         'balance': 1000
-    #         }
-    #     response = self.app.put(f'/users/{mock_user.id}', data=json.dumps(mock_update_data))
-    #     data = json.loads(response.get_data(as_text=True))
-    #     self.assertEqual(response.status_code,200)
-    #     self.assertEqual(data[new_name], mock_update_data.name)
-    #     self.assertEqual (data[new_pin], mock_update_data.pin)
-    #     self.assertEqual(data[new_balance], mock_update_data.balance)
+    def test_update_user(self):
+        mock_user = self.create_user()
+        mock_update_data = {
+            'name': "Guinea Pig",
+            'balance': 100,
+            'pin': "1244"
+            }
+        response = self.app.put(f'/users/{mock_user.id}', data=json.dumps(mock_update_data))
+        data = json.loads(response.get_data(as_text=True))
+        self.assertEqual(response.status_code,200)
+        self.assertEqual(data['name'], 'Guinea Pig')
+        self.assertEqual(data['pin'], '1244')
+        self.assertEqual(data['balance'], 100)
     
     def test_delete_user(self):
         mock_user = self.create_user()        
