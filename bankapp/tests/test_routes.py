@@ -9,7 +9,7 @@ class TestRoutes(unittest.TestCase):
     def setUp(self):
         app.config['TESTING']=True
         app.config['DEBUG']=False
-        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///side.db'
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
         db.drop_all()
         db.create_all()
         self.app = app.test_client()
