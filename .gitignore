@@ -1,5 +1,6 @@
-/venv
+/bank
 /__pycache__
 /bankapp/__pycache__
 /.vscode
 /bankapp/snippets
+/instance
