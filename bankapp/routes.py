@@ -79,7 +79,7 @@ def transfer(user_id):
     amount = data["amount"]
     pin_number = data["pin"]
     receiver_id = data["receiverId"]
-    if amount >= 3000:
+    if amount > 3000:
         abort(400, description='You are not allowed to go over 3000 euro daily limit') 
     else:
         sender = User.query.get_or_404(user_id, "Sender does not exist")
