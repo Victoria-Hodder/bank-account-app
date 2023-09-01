@@ -7,12 +7,12 @@ from bankapp.schemas import UserSchema
 def home_page():
     return 'This is a bank account app!'
 
-# http://127.0.0.1:5000/balance?pin=5594&user_name=John%20Brown
+# http://127.0.0.1:5000/balance?pin=1234&name=Victoria
 @app.route('/balance')
 def display_balance():
     pin_number = request.args.get('pin')
-    user_name = request.args.get('user_name')
-    searchedUser = User.query.filter_by(name=user_name).first()
+    name = request.args.get('name')
+    searchedUser = User.query.filter_by(name=name).first()
 
     if searchedUser: 
         if pin_number == searchedUser.pin:
@@ -43,7 +43,7 @@ def withdraw(user_id):
                 user.balance -= amount
                 db.session.commit()
                 user_schema = UserSchema()
-                response = user_schema.dump(user).data
+                response = user_schema.dump(user)
                 return jsonify(response)       
             else:
                 abort(
@@ -53,7 +53,7 @@ def withdraw(user_id):
         else:
             abort(400, description="Pin is not correct")
 
-
+# http://127.0.0.1:5000/users/1/deposit
 @app.route('/users/<int:user_id>/deposit', methods=['PATCH'])
 def deposit(user_id):
     data = request.get_json(force=True)
@@ -67,7 +67,7 @@ def deposit(user_id):
             user.balance += amount
             db.session.commit()
             user_schema = UserSchema()
-            response = user_schema.dump(user).data
+            response = user_schema.dump(user)
             return jsonify(response)   
         else:
             abort(400, description="Pin is not correct")
@@ -90,7 +90,7 @@ def transfer(user_id):
                 receiver.balance += amount
                 db.session.commit()
                 user_schema = UserSchema()
-                response = user_schema.dump(receiver).data
+                response = user_schema.dump(receiver)
                 return jsonify(response)
             else:
                 abort(400, description='You dont have enought amount of money in your acount!')
@@ -101,7 +101,7 @@ def transfer(user_id):
 def get_users():
     user_schema = UserSchema(many=True)
     users = User.query.all()
-    response = user_schema.dump(users).data
+    response = user_schema.dump(users)
     return jsonify(response)
 
 @app.route('/users', methods=['POST'])
@@ -122,16 +122,15 @@ def create_user():
             new_user = User(name=new_name, pin=new_pin, balance=new_balance)
             db.session.add(new_user)
             db.session.commit()
-            #we use Marshmallow library to serialize
             user_schema = UserSchema()
-            response = user_schema.dump(new_user).data
+            response = user_schema.dump(new_user)
             return jsonify(response)
 
 @app.route('/users/<int:user_id>', methods=['GET']) #GET is default
 def get_user(user_id):
     user = User.query.get_or_404(user_id, "You do not exist, please try again")
     user_schema = UserSchema()
-    response = user_schema.dump(user).data
+    response = user_schema.dump(user)
     return jsonify(response)
 
 #update resource details
@@ -148,7 +147,7 @@ def update_user(user_id):
     user.balance = new_balance
     db.session.commit()
     user_schema = UserSchema()
-    response = user_schema.dump(user).data
+    response = user_schema.dump(user)
     return jsonify(response)
 
 
