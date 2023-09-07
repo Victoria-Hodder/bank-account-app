@@ -15,7 +15,10 @@ You can simply create and activate a virtual environment so:
 ~/your_workspace$ python3 -m venv bank
 
 # activate virutal env
-~/your_workspace$ source env/bin/activate
+~/your_workspace$ source bank/bin/activate
+
+# The environment name in brackets to the left of your workspace indicates the environment is active
+(bank) ~/your_workspace$
 ```
 
 Easy peasy. Now you can install all the necessary libraries to get the project running...
@@ -54,3 +57,7 @@ Then enter a json body (for example)...
 ...which would add a new user by the name of "Maya" in your database. An id will be automatically created for you.
 
 You can download and learn more about postman here https://www.postman.com/
+
+## Testing the app
+
+... Documentation to follow ...
