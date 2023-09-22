@@ -48,12 +48,25 @@ def create_user():
             return jsonify(response)
 
 
-@app.route('/users/<int:user_id>/update_name', methods= ['PUT'])
-def update_user_name(user_id):
+@app.route('/users/<int:user_id>/update_details', methods= ['PUT'])
+def update_user_details(user_id):
     data = request.get_json(force=True)
-    new_name = data['name']
     user = User.query.get_or_404(user_id)
-    user.name = new_name
+
+    json_keys = []
+    
+    # Create a list of keys present in json input
+    for key in data.keys():
+        json_keys.append(key)
+
+    # iterate over these keys and update if value differs from db
+    # TODO: add other fields which can be updated (address, tax nr etc)
+    for key in json_keys:
+        if key == 'name' and data['name'] != user.name:
+            new_name = data['name']
+            user.name = new_name
+
+
     db.session.commit()
     user_schema = UserSchema()
     response = user_schema.dump(user)
