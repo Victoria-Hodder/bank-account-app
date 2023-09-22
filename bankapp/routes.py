@@ -48,21 +48,28 @@ def create_user():
             return jsonify(response)
 
 
-@app.route('/users/<int:user_id>', methods= ['PUT'])
-def update_user(user_id):
+@app.route('/users/<int:user_id>/update_name', methods= ['PUT'])
+def update_user_name(user_id):
     data = request.get_json(force=True)
     new_name = data['name']
-    new_pin = data['pin']
-    new_balance = data['balance']
     user = User.query.get_or_404(user_id)
     user.name = new_name
-    user.pin = new_pin
-    user.balance = new_balance
     db.session.commit()
     user_schema = UserSchema()
     response = user_schema.dump(user)
     return jsonify(response)
 
+
+@app.route('/users/<int:user_id>/update_pin', methods= ['PUT'])
+def update_user_pin(user_id):
+    data = request.get_json(force=True)
+    new_pin = data['pin']
+    user = User.query.get_or_404(user_id)
+    user.pin = new_pin
+    db.session.commit()
+    user_schema = UserSchema()
+    response = user_schema.dump(user)
+    return jsonify(response)
 
 
 # http://127.0.0.1:5000/users/1/withdraw
