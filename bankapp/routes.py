@@ -76,13 +76,18 @@ def update_user_details(user_id):
 @app.route('/users/<int:user_id>/update_pin', methods= ['PUT'])
 def update_user_pin(user_id):
     data = request.get_json(force=True)
-    new_pin = data['pin']
+    current_pin = data['pin']
+    new_pin = data['new pin']
     user = User.query.get_or_404(user_id)
-    user.pin = new_pin
-    db.session.commit()
-    user_schema = UserSchema()
-    response = user_schema.dump(user)
-    return jsonify(response)
+    
+    if current_pin == user.pin:
+        user.pin = new_pin
+        db.session.commit()
+        user_schema = UserSchema()
+        response = user_schema.dump(user)
+        return jsonify(response)
+    else:
+        abort(400, description="Pin is not correct. You must know your current pin to update it.")
 
 
 # http://127.0.0.1:5000/users/1/withdraw
