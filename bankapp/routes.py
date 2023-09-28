@@ -11,35 +11,17 @@ def home_page():
 
 @app.route('/users', methods= ['GET'])
 def get_users():
-    return User.get_users()
+    return User().get_users()
 
 
 @app.route('/users/<int:user_id>', methods=['GET'])
 def get_user(user_id):
-    return User.get_user(user_id)
+    return User().get_user(user_id)
 
 
 @app.route('/users', methods=['POST'])
 def create_user():
-    data = request.get_json(force=True)
-    new_name = data ['name']
-    new_pin = int(data['pin'])
-    new_balance = int(data['balance'])
-
-    if not new_name and new_balance and new_pin:
-        abort(400, description="Bad request!")
-    else:
-        # check user exists
-        user = User.query.filter_by(name=new_name).first()
-        if user:
-            abort(400, description="Oops user already exists")
-        else:
-            new_user = User(name=new_name, pin=new_pin, balance=new_balance)
-            db.session.add(new_user)
-            db.session.commit()
-            user_schema = UserSchema()
-            response = user_schema.dump(new_user)
-            return jsonify(response)
+    return User().create_user()
 
 
 @app.route('/users/<int:user_id>/update_details', methods= ['PUT'])

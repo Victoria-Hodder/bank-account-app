@@ -1,8 +1,8 @@
 from bankapp import ma
-from bankapp.models import User
+from bankapp.models import UserModel
 
 class UserSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
-        model = User
+        model = UserModel
         load_instance = True
         
