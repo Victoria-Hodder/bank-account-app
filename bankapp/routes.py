@@ -11,18 +11,12 @@ def home_page():
 
 @app.route('/users', methods= ['GET'])
 def get_users():
-    user_schema = UserSchema(many=True)
-    users = User.query.all()
-    response = user_schema.dump(users)
-    return jsonify(response)
+    return User.get_users()
 
 
 @app.route('/users/<int:user_id>', methods=['GET'])
 def get_user(user_id):
-    user = User.query.get_or_404(user_id, "You do not exist, please try again")
-    user_schema = UserSchema()
-    response = user_schema.dump(user)
-    return jsonify(response)
+    return User.get_user(user_id)
 
 
 @app.route('/users', methods=['POST'])
