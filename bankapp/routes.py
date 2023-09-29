@@ -1,6 +1,7 @@
 from flask import request, jsonify, abort
 from bankapp import app, db
 from bankapp.user import User
+from bankapp.user_details import UserDetails
 from bankapp.schemas import UserSchema
 
 
@@ -31,45 +32,12 @@ def delete_user(user_id):
 
 @app.route('/users/<int:user_id>/update_details', methods= ['PUT'])
 def update_user_details(user_id):
-    data = request.get_json(force=True)
-    user = User.query.get_or_404(user_id)
-
-    json_keys = []
-    
-    for key in data.keys():
-        json_keys.append(key)
-
-    # TODO: add other fields which can be updated (address, tax nr etc)
-    for key in json_keys:
-        if key == 'name' and data['name'] != user.name:
-            new_name = data['name']
-            user.name = new_name
-        if key == 'address' and data['address'] != user.address:
-            new_address = data['address']
-            user.address = new_address
-
-
-    db.session.commit()
-    user_schema = UserSchema()
-    response = user_schema.dump(user)
-    return jsonify(response)
+    return UserDetails().update(user_id)
 
 
 @app.route('/users/<int:user_id>/update_pin', methods= ['PUT'])
 def update_user_pin(user_id):
-    data = request.get_json(force=True)
-    current_pin = data['pin']
-    new_pin = data['new pin']
-    user = User.query.get_or_404(user_id)
-    
-    if current_pin == user.pin:
-        user.pin = new_pin
-        db.session.commit()
-        user_schema = UserSchema()
-        response = user_schema.dump(user)
-        return jsonify(response)
-    else:
-        abort(400, description="Pin is not correct. You must know your current pin to update it.")
+    return UserDetails().update_pin(user_id)
 
 
 # http://127.0.0.1:5000/users/1/withdraw
