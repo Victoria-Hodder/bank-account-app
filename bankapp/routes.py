@@ -1,6 +1,6 @@
 from flask import request, jsonify, abort
 from bankapp import app, db
-from bankapp.models import User, UserModel
+from bankapp.user import User
 from bankapp.schemas import UserSchema
 
 
@@ -26,7 +26,7 @@ def create_user():
 
 @app.route('/users/<int:user_id>', methods=['DELETE'])
 def delete_user(user_id):
-    return User.delete_user(user_id)
+    return User().delete_user(user_id)
 
 
 @app.route('/users/<int:user_id>/update_details', methods= ['PUT'])
