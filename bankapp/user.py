@@ -4,14 +4,18 @@ from flask import jsonify, abort, request
 
 
 class User(UserModel):
+    
+    def __init__(self, user_id=None):
+        self.user_id = user_id
+
     def get_users(self):
         user_schema = UserSchema(many=True)
         users = UserModel.query.all()
         response = user_schema.dump(users)
         return jsonify(response)
     
-    def get_user(self, user_id):
-        user = UserModel.query.get_or_404(user_id, "You do not exist, please try again")
+    def get_user(self):
+        user = UserModel.query.get_or_404(self.user_id, "You do not exist, please try again")
         user_schema = UserSchema()
         response = user_schema.dump(user)
         return jsonify(response)
@@ -37,8 +41,8 @@ class User(UserModel):
                 response = user_schema.dump(new_user)
                 return jsonify(response)
 
-    def delete_user(self, user_id):
-        user = UserModel.query.get_or_404(user_id, "You do not exist, please try again")
+    def delete_user(self):
+        user = UserModel.query.get_or_404(self.user_id, "You do not exist, please try again")
         db.session.delete(user)
         db.session.commit()
         return f"bye bye {user.name}"

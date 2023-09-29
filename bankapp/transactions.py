@@ -4,14 +4,14 @@ from flask import request, jsonify, abort
 
 class Transactions(User):
     
-    def withdraw(self, user_id):
+    def withdraw(self):
         data = request.get_json(force=True)
         amount = data['amount']
         pin = data['pin']
         if amount > 2000:
             abort(400, description='You are not allowed to go over 2000 euro daily limit') 
         else:
-            user = User.query.get_or_404(user_id, "User does not exist")
+            user = User.query.get_or_404(self.user_id, "User does not exist")
             if pin == user.pin: 
                 if amount <= user.balance:
                     user.balance -= amount
@@ -27,14 +27,14 @@ class Transactions(User):
             else:
                 abort(400, description="Pin is not correct")
 
-    def deposit(self, user_id):
+    def deposit(self):
         data = request.get_json(force=True)
         amount = data['amount']
         pin = data['pin']
         if amount >= 3000:
             abort(400, description='You are not allowed to go over 3000 euro daily limit') 
         else:
-            user = User.query.get_or_404(user_id, "User does not exist")
+            user = User.query.get_or_404(self.user_id, "User does not exist")
             if pin == user.pin:
                 user.balance += amount
                 db.session.commit()
@@ -44,7 +44,7 @@ class Transactions(User):
             else:
                 abort(400, description="Pin is not correct")
 
-    def transfer(self, user_id):
+    def transfer(self):
         data = request.get_json(force=True)
         amount = data["amount"]
         pin_number = data["pin"]
@@ -52,7 +52,7 @@ class Transactions(User):
         if amount > 3000:
             abort(400, description='You are not allowed to go over 3000 euro daily limit') 
         else:
-            sender = User.query.get_or_404(user_id, "Sender does not exist")
+            sender = User.query.get_or_404(self.user_id, "Sender does not exist")
             if pin_number == sender.pin:
                 if amount <= sender.balance:
                     receiver = User.query.get_or_404(receiver_id, "Receiver user does not exist")

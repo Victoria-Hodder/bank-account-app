@@ -4,9 +4,9 @@ from flask import jsonify, request, abort
 
 class UserDetails(User):
 
-    def update(self, user_id):
+    def update(self):
         data = request.get_json(force=True)
-        user = User.query.get_or_404(user_id)
+        user = User.query.get_or_404(self.user_id)
 
         json_keys = []
         
@@ -28,11 +28,11 @@ class UserDetails(User):
         return jsonify(response)
     
 
-    def update_pin(self, user_id):
+    def update_pin(self):
         data = request.get_json(force=True)
         current_pin = data['pin']
         new_pin = data['new pin']
-        user = User.query.get_or_404(user_id)
+        user = User.query.get_or_404(self.user_id)
         
         if current_pin == user.pin:
             user.pin = new_pin
