@@ -1,6 +1,6 @@
 from flask import request, jsonify, abort
 from bankapp import app, db
-from bankapp.models import User
+from bankapp.user import User
 from bankapp.schemas import UserSchema
 
 
@@ -11,41 +11,22 @@ def home_page():
 
 @app.route('/users', methods= ['GET'])
 def get_users():
-    user_schema = UserSchema(many=True)
-    users = User.query.all()
-    response = user_schema.dump(users)
-    return jsonify(response)
+    return User().get_users()
 
 
 @app.route('/users/<int:user_id>', methods=['GET'])
 def get_user(user_id):
-    user = User.query.get_or_404(user_id, "You do not exist, please try again")
-    user_schema = UserSchema()
-    response = user_schema.dump(user)
-    return jsonify(response)
+    return User().get_user(user_id)
 
 
 @app.route('/users', methods=['POST'])
 def create_user():
-    data = request.get_json(force=True)
-    new_name = data ['name']
-    new_pin = int(data['pin'])
-    new_balance = int(data['balance'])
+    return User().create_user()
 
-    if not new_name and new_balance and new_pin:
-        abort(400, description="Bad request!")
-    else:
-        # check user exists
-        user = User.query.filter_by(name=new_name).first()
-        if user:
-            abort(400, description="Oops user already exists")
-        else:
-            new_user = User(name=new_name, pin=new_pin, balance=new_balance)
-            db.session.add(new_user)
-            db.session.commit()
-            user_schema = UserSchema()
-            response = user_schema.dump(new_user)
-            return jsonify(response)
+
+@app.route('/users/<int:user_id>', methods=['DELETE'])
+def delete_user(user_id):
+    return User().delete_user(user_id)
 
 
 @app.route('/users/<int:user_id>/update_details', methods= ['PUT'])
@@ -55,16 +36,17 @@ def update_user_details(user_id):
 
     json_keys = []
     
-    # Create a list of keys present in json input
     for key in data.keys():
         json_keys.append(key)
 
-    # iterate over these keys and update if value differs from db
     # TODO: add other fields which can be updated (address, tax nr etc)
     for key in json_keys:
         if key == 'name' and data['name'] != user.name:
             new_name = data['name']
             user.name = new_name
+        if key == 'address' and data['address'] != user.address:
+            new_address = data['address']
+            user.address = new_address
 
 
     db.session.commit()
@@ -161,9 +143,4 @@ def transfer(user_id):
             abort(400, description="Pin is not correct")
 
 
-@app.route('/users/<int:user_id>', methods=['DELETE'])
-def delete_user(user_id):
-    user = User.query.get_or_404(user_id, "You do not exist, please try again")
-    db.session.delete(user)
-    db.session.commit()
-    return f"bye bye {user.name}"
+

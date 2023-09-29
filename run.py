@@ -15,3 +15,4 @@ app.register_blueprint(SWAGGER_BLUEPRINT, url_prefix=SWAGGER_URL)
 
 if __name__ == '__main__':
     app.run(debug = True)
+    

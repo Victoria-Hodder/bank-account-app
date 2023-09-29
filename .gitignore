@@ -1,6 +1,7 @@
 /bank
 /__pycache__
 /bankapp/__pycache__
+/bankapp/tests/__pycache__
 /.vscode
-/bankapp/snippets
 /instance
+bankapp/snippets.py
