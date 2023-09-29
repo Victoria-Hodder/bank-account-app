@@ -36,16 +36,17 @@ def update_user_details(user_id):
 
     json_keys = []
     
-    # Create a list of keys present in json input
     for key in data.keys():
         json_keys.append(key)
 
-    # iterate over these keys and update if value differs from db
     # TODO: add other fields which can be updated (address, tax nr etc)
     for key in json_keys:
         if key == 'name' and data['name'] != user.name:
             new_name = data['name']
             user.name = new_name
+        if key == 'address' and data['address'] != user.address:
+            new_address = data['address']
+            user.address = new_address
 
 
     db.session.commit()
