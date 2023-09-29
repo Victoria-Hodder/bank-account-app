@@ -45,5 +45,11 @@ class User(UserModel):
                 response = user_schema.dump(new_user)
                 return jsonify(response)
 
+    def delete_user(self, user_id):
+        user = UserModel.query.get_or_404(user_id, "You do not exist, please try again")
+        db.session.delete(user)
+        db.session.commit()
+        return f"bye bye {user.name}"
+
 
 from bankapp.schemas import UserSchema

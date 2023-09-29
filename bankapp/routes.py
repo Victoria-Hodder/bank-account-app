@@ -1,6 +1,6 @@
 from flask import request, jsonify, abort
 from bankapp import app, db
-from bankapp.models import User
+from bankapp.models import User, UserModel
 from bankapp.schemas import UserSchema
 
 
@@ -22,6 +22,11 @@ def get_user(user_id):
 @app.route('/users', methods=['POST'])
 def create_user():
     return User().create_user()
+
+
+@app.route('/users/<int:user_id>', methods=['DELETE'])
+def delete_user(user_id):
+    return User.delete_user(user_id)
 
 
 @app.route('/users/<int:user_id>/update_details', methods= ['PUT'])
@@ -137,9 +142,4 @@ def transfer(user_id):
             abort(400, description="Pin is not correct")
 
 
-@app.route('/users/<int:user_id>', methods=['DELETE'])
-def delete_user(user_id):
-    user = User.query.get_or_404(user_id, "You do not exist, please try again")
-    db.session.delete(user)
-    db.session.commit()
-    return f"bye bye {user.name}"
+
