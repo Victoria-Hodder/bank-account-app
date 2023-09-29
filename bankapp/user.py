@@ -19,17 +19,18 @@ class User(UserModel):
     def create_user(self):
         data = request.get_json(force=True)
         new_name = data ['name']
+        new_address = data['address']
         new_pin = int(data['pin'])
         new_balance = int(data['balance'])
 
-        if not new_name and new_balance and new_pin:
+        if not new_name and new_address and new_balance and new_pin:
             abort(400, description="Bad request!")
         else:
             user = UserModel.query.filter_by(name=new_name).first()
             if user:
                 abort(400, description="Oops user already exists")
             else:
-                new_user = UserModel(name=new_name, pin=new_pin, balance=new_balance)
+                new_user = UserModel(name=new_name, address=new_address, pin=new_pin, balance=new_balance)
                 db.session.add(new_user)
                 db.session.commit()
                 user_schema = UserSchema()
