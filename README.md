@@ -9,8 +9,7 @@ First of all, set up a virtual environment using your tool of choice.
 You can simply create and activate a virtual environment so:
 
 ```
-# create virutal environment (if bank is the name you want 
-# to give to your virtual environment:
+# create virutal environment (if bank is the name you want to give to your virtual environment):
 
 ~/your_workspace$ python3 -m venv bank
 
@@ -40,7 +39,7 @@ Once your app is running successfully, you should be able to access it on your b
 
 ## Testing the endpoints
 
-Though you can use the browser, I used postman to test the different http requests. This way it is much easier to swop between different methods.
+Though you can use the browser, I used postman to test the different http requests. This way it is much easier to swap between different methods.
 
 For example if you are using POST method to create a new user, you would enter the url: http://127.0.0.1:5000/users
 
@@ -49,6 +48,7 @@ Then enter a json body (for example)...
 ```
 {
     "name": "Maya",
+    "address": "North Street, Glasgow"
     "pin": "9876",
     "balance": 2500
 }
