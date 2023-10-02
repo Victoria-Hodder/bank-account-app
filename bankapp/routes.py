@@ -1,5 +1,4 @@
-from flask import request, jsonify, abort
-from bankapp import app, db
+from bankapp import app
 from .controllers.user import User
 from .controllers.user_details import UserDetails
 from .controllers.transactions import Transactions
