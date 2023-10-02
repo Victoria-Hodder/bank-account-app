@@ -1,9 +1,8 @@
 from flask import request, jsonify, abort
 from bankapp import app, db
-from bankapp.user import User
-from bankapp.user_details import UserDetails
-from bankapp.transactions import Transactions
-from bankapp.schemas import UserSchema
+from .controllers.user import User
+from .controllers.user_details import UserDetails
+from .controllers.transactions import Transactions
 
 
 @app.route('/')

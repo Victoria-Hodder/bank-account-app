@@ -1,5 +1,5 @@
 from bankapp import db
-from bankapp.user import User
+from .user import User
 from flask import request, jsonify, abort
 
 class Transactions(User):

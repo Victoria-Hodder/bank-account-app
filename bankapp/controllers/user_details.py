@@ -1,5 +1,5 @@
 from bankapp import db
-from bankapp.user import User
+from .user import User
 from flask import jsonify, request, abort
 
 class UserDetails(User):
@@ -8,12 +8,8 @@ class UserDetails(User):
         data = request.get_json(force=True)
         user = User.query.get_or_404(self.user_id)
 
-        json_keys = []
+        json_keys = [key for key in data.keys()]
         
-        for key in data.keys():
-            json_keys.append(key)
-
-        # TODO: add other fields which can be updated (address, tax nr etc)
         for key in json_keys:
             if key == 'name' and data['name'] != user.name:
                 new_name = data['name']
