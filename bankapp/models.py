@@ -11,5 +11,28 @@ class UserModel(db.Model):
     def __repr__(self):
         return f"UserModel(name='{self.name}', pin='{self.pin}', balance='{self.balance}', address='{self.address})"
 
+
 # Add Accounts Model
-# id, type, balance, user_id
+# id, name, (later) balance, user_id
+class AccountModel(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    account_name = db.Column(db.String(120), nullable=False)
+
+    def __repr__(self):
+        return f"AccountModel(account name='{self.account_name}')"
+
+
+
+"""
+
+class Author(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255))
+
+
+class Book(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(255))
+    author_id = db.Column(db.Integer, db.ForeignKey("author.id"))
+    author = db.relationship("Author", backref="books")
+"""
