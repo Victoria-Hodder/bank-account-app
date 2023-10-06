@@ -2,12 +2,13 @@ from bankapp import app
 from .controllers.user import User
 from .controllers.user_details import UserService
 from .controllers.transactions import Transactions
-from .controllers.accounts import Accounts
+from .controllers.accounts import AccountService
 
 
 @app.route('/')
 def home_page():
     return 'This is a bank account app!'
+
 
 
 # Routes associated with USERS
@@ -29,6 +30,7 @@ def create_user():
 @app.route('/users/<int:user_id>', methods=['DELETE'])
 def delete_user(user_id):
     return User(user_id).delete_user()
+
 
 
 # Routes associated with USERS SERVICE
@@ -59,19 +61,22 @@ def deposit(user_id):
 def transfer(user_id):
     return Transactions(user_id).transfer()
 
+
+
 # Routes associated with ACCOUNTS
 @app.route('/accounts/', methods= ['GET'])
 def accounts():
-    return "List of accounts"
+    return AccountService().get_accounts()
 
 @app.route('/accounts/open_account', methods= ['POST'])
 def open_account():
-    return Accounts.open_account()
+    return AccountService().open_account()
+
+@app.route('/accounts/<int:account_id>/close_account', methods= ['DELETE'])
+def close_account(account_id):
+    return AccountService(account_id).close_account()
 
 
-@app.route('/accounts/close_account', methods= ['DELETE'])
-def close_account():
-    return Accounts.close_account()
 
 
 """
