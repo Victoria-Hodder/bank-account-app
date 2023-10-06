@@ -2,7 +2,7 @@ from bankapp import db
 from .user import User
 from flask import jsonify, request, abort
 
-class UserDetails(User):
+class UserService(User):
 
     def update(self):
         data = request.get_json(force=True)

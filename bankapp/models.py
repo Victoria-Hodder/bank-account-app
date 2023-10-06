@@ -10,3 +10,6 @@ class UserModel(db.Model):
 
     def __repr__(self):
         return f"UserModel(name='{self.name}', pin='{self.pin}', balance='{self.balance}', address='{self.address})"
+
+# Add Accounts Model
+# id, type, balance, user_id

@@ -2,6 +2,9 @@ from bankapp import db
 from .user import User
 from flask import request, jsonify, abort
 
+
+# TODO: Need to specify which account to interact with
+
 class Transactions(User):
     
     def withdraw(self):
