@@ -7,6 +7,7 @@ class UserModel(db.Model):
     address = db.Column(db.String(40), nullable=False)
     pin = db.Column(db.String(4), nullable=False)
     balance = db.Column(db.Integer)
+    accounts = db.relationship('AccountModel', backref='user_account', lazy='dynamic')
 
     def __repr__(self):
         return f"UserModel(name='{self.name}', pin='{self.pin}', balance='{self.balance}', address='{self.address})"
@@ -17,22 +18,7 @@ class UserModel(db.Model):
 class AccountModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     account_name = db.Column(db.String(120), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("user_model.id"))
 
     def __repr__(self):
-        return f"AccountModel(account name='{self.account_name}')"
-
-
-
-"""
-
-class Author(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(255))
-
-
-class Book(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(255))
-    author_id = db.Column(db.Integer, db.ForeignKey("author.id"))
-    author = db.relationship("Author", backref="books")
-"""
+        return f"AccountModel(id={self.id},account name='{self.account_name},user_id={self.user_id}')"
