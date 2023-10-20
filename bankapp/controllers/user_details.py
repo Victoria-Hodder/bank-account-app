@@ -2,7 +2,7 @@ from bankapp import db
 from .user import User
 from flask import jsonify, request, abort
 
-class UserDetails(User):
+class UserService(User):
 
     def update(self):
         data = request.get_json(force=True)
@@ -40,4 +40,4 @@ class UserDetails(User):
             abort(400, description="Pin is not correct. You must know your current pin to update it.")
     
     
-from bankapp.schemas import UserSchema
+from bankapp.schemas.user_schema import UserSchema

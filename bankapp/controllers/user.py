@@ -1,5 +1,5 @@
 from bankapp import db
-from bankapp.models import UserModel
+from bankapp.models.user_model import UserModel
 from flask import jsonify, abort, request
 
 
@@ -28,7 +28,7 @@ class User(UserModel):
         new_balance = int(data['balance'])
 
         if not new_name and new_address and new_balance and new_pin:
-            abort(400, description="Bad request!")
+            abort(400, description="Something is missing. Please ensure you fill out all fields.")
         else:
             user = UserModel.query.filter_by(name=new_name).first()
             if user:
@@ -48,4 +48,4 @@ class User(UserModel):
         return f"bye bye {user.name}"
 
 
-from bankapp.schemas import UserSchema
+from bankapp.schemas.user_schema import UserSchema
