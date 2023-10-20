@@ -40,4 +40,4 @@ class UserService(User):
             abort(400, description="Pin is not correct. You must know your current pin to update it.")
     
     
-from bankapp.schemas import UserSchema
+from bankapp.schemas.user_schema import UserSchema

@@ -1,5 +1,5 @@
 from bankapp import app, db
-from bankapp.models import User
+from bankapp.models.user_model import User
 import unittest
 import json
 

@@ -1,5 +1,5 @@
 from bankapp import db
-from bankapp.models import UserModel
+from bankapp.models.user_model import UserModel
 from flask import jsonify, abort, request
 
 
@@ -48,4 +48,4 @@ class User(UserModel):
         return f"bye bye {user.name}"
 
 
-from bankapp.schemas import UserSchema
+from bankapp.schemas.user_schema import UserSchema

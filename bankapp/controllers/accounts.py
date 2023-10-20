@@ -17,7 +17,7 @@ Where would I put the logic for checking the account type ('current'/'savings')?
 """
 
 from bankapp import db
-from bankapp.models import AccountModel
+from bankapp.models.account_model import AccountModel
 from flask import jsonify, abort, request
 
 class AccountService:
@@ -38,8 +38,6 @@ class AccountService:
         new_account = data ['account name']
         user_id = data['user id']
         # TODO: add pin functionality
-        # pin = data['pin']
-        # user = User.query.get_or_404(self.user_id)
 
         if not new_account:
             abort(400, description="To create a new account, you must give it a name.")
@@ -63,4 +61,4 @@ class AccountService:
         return f"You successfully deleted your account. Thanks for using V's banking"
     
 
-from bankapp.schemas import AccountSchema
+from bankapp.schemas.account_schema import AccountSchema

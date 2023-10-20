@@ -1,5 +1,6 @@
 from bankapp import ma
-from bankapp.models import UserModel, AccountModel
+from bankapp.models.user_model import UserModel
+
 
 class UserSchema(ma.SQLAlchemySchema):
     class Meta:
@@ -11,8 +12,3 @@ class UserSchema(ma.SQLAlchemySchema):
     pin = ma.auto_field()
     balance = ma.auto_field()
     accounts = ma.auto_field()
-
-class AccountSchema(ma.SQLAlchemyAutoSchema):
-    class Meta:
-        model = AccountModel
-        include_fk = True

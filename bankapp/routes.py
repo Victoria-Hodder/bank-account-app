@@ -45,8 +45,6 @@ def update_user_pin(user_id):
 
 
 # Routes associated with TRANSACTIONS
-# TODO: Need to specify which account to interact with
-# e.g. users/1/accounts/2/withdraw
 @app.route('/users/<int:user_id>/withdraw', methods=['PUT'])
 def withdraw(user_id):
     return Transactions(user_id).withdraw()
@@ -64,7 +62,7 @@ def transfer(user_id):
 
 
 # Routes associated with ACCOUNTS
-@app.route('/accounts/', methods= ['GET'])
+@app.route('/accounts', methods= ['GET'])
 def accounts():
     return AccountService().get_accounts()
 
@@ -75,15 +73,3 @@ def open_account():
 @app.route('/accounts/<int:account_id>/close_account', methods= ['DELETE'])
 def close_account(account_id):
     return AccountService(account_id).close_account()
-
-
-
-
-"""
-Accounts:
-Example routes:
-/user/<int:user_id>/accounts --> list accounts attached to a user
-/user/<int:user_id>/accounts/<int:account_id> --> details of specific account attached to a user
-
-
-"""

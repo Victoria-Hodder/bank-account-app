@@ -1,4 +1,5 @@
 from bankapp import db
+from bankapp.models.account_model import AccountModel
 
 
 class UserModel(db.Model):
@@ -13,13 +14,3 @@ class UserModel(db.Model):
     def __repr__(self):
         return f"UserModel(name='{self.name}', pin='{self.pin}', balance='{self.balance}', address='{self.address})"
 
-
-# Add Accounts Model
-# id, name, (later) balance, user_id
-class AccountModel(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    account_name = db.Column(db.String(120), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey("user_model.id"))
-
-    def __repr__(self):
-        return f"AccountModel(id={self.id},account name='{self.account_name},user_id={self.user_id}')"

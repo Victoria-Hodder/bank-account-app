@@ -1,8 +1,5 @@
 /bank
-/__pycache__
-/bankapp/__pycache__
-/bankapp/controllers/__pycache__
-/bankapp/controllers/account_type_doodle.py
-/bankapp/tests/__pycache__
+__pycache__
+.pyc
 /.vscode
 /instance

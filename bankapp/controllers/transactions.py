@@ -72,4 +72,4 @@ class Transactions(User):
 
 
 
-from bankapp.schemas import UserSchema
+from bankapp.schemas.user_schema import UserSchema
