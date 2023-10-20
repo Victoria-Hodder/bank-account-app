@@ -76,4 +76,4 @@ def open_account(user_id):
 
 @app.route('/users/<int:user_id>/accounts/<int:account_id>/close_account', methods= ['DELETE'])
 def close_account(account_id, user_id):
-    return AccountService(account_id, user_id).close_account()
+    return AccountService(account_id).close_account(user_id)

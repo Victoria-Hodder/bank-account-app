@@ -24,9 +24,8 @@ from bankapp.schemas.user_schema import UserSchema
 
 class AccountService:
 
-    def __init__(self, account_id=None, user_id=None):
+    def __init__(self, account_id=None):
         self.account_id = account_id
-        self.user_id = user_id
 
     def get_accounts(self):
         accounts = AccountModel.query.all()
@@ -34,7 +33,6 @@ class AccountService:
         response = account_schema.dump(accounts)
         return jsonify(response)
     
-
     def get_user_accounts(self, user_id):
         user = UserModel.query.get_or_404(user_id, "You do not exist, please try again")
         accounts = AccountModel.query.all()
@@ -46,10 +44,8 @@ class AccountService:
 
         account_schema = AccountSchema(many=True)
         response = account_schema.dump(user_accounts)
-
         return response
 
-    
     def open_account(self, user_id):
         user = UserModel.query.get_or_404(user_id, "You do not exist, please try again")
         data = request.get_json(force=True)
@@ -59,21 +55,22 @@ class AccountService:
         if user_pin == user.pin:
             if not new_account:
                 abort(400, description="To create a new account, you must give it a name.")
-            elif (new_account.lower() != 'current') and (new_account.lower() != 'savings'):
-                abort(400, description="There are only two valid account types: savings or current.")
-            else:
-                new_account = AccountModel(account_name=new_account, user_id=user_id)
-                db.session.add(new_account)
-                db.session.commit()
-                user_schema = AccountSchema()
-                response = user_schema.dump(new_account)
-                return jsonify(response)
+            else: 
+                if (new_account.lower() != 'current') and (new_account.lower() != 'savings'):
+                    abort(400, description="There are only two valid account types: savings or current.")
+                else:
+                    new_account = AccountModel(account_name=new_account, user_id=user_id)
+                    db.session.add(new_account)
+                    db.session.commit()
+                    user_schema = AccountSchema()
+                    response = user_schema.dump(new_account)
+                    return jsonify(response)
         else:
             abort(400, description="Pin is not correct. Please try again")
     
-    def close_account(self):
+    def close_account(self, user_id):
         account = AccountModel.query.get_or_404(self.account_id, "You cannot delete an account which does not exist")
-        user = UserModel.query.get_or_404(self.user_id, "You do not exist, please try again")
+        user = UserModel.query.get_or_404(user_id, "You do not exist, please try again")
         db.session.delete(account)
         db.session.commit()
         return f"You successfully deleted your account. Thanks for using V's banking, {user.name}"
