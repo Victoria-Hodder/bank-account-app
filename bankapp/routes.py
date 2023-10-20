@@ -63,13 +63,17 @@ def transfer(user_id):
 
 # Routes associated with ACCOUNTS
 @app.route('/accounts', methods= ['GET'])
-def accounts():
+def get_accounts():
     return AccountService().get_accounts()
 
-@app.route('/accounts/open_account', methods= ['POST'])
-def open_account():
-    return AccountService().open_account()
+@app.route('/users/<int:user_id>/accounts', methods= ['GET'])
+def get_user_accounts(user_id):
+    return AccountService().get_user_accounts(user_id)
 
-@app.route('/accounts/<int:account_id>/close_account', methods= ['DELETE'])
-def close_account(account_id):
-    return AccountService(account_id).close_account()
+@app.route('/users/<int:user_id>/accounts/open_account', methods= ['POST'])
+def open_account(user_id):
+    return AccountService().open_account(user_id)
+
+@app.route('/users/<int:user_id>/accounts/<int:account_id>/close_account', methods= ['DELETE'])
+def close_account(account_id, user_id):
+    return AccountService(account_id).close_account(user_id)
