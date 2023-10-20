@@ -19,6 +19,7 @@ Where would I put the logic for checking the account type ('current'/'savings')?
 from bankapp import db
 from bankapp.models.account_model import AccountModel
 from flask import jsonify, abort, request
+from bankapp.models.user_model import UserModel
 
 class AccountService:
 
@@ -55,10 +56,20 @@ class AccountService:
     
     def close_account(self):
         account = AccountModel.query.get_or_404(self.account_id, "You cannot delete an account which does not exist")
+        user = UserModel.query.get_or_404(self.user_id, "You do not exist, please try again")
         db.session.delete(account)
         db.session.commit()
         # TODO: add users name to delete message
-        return f"You successfully deleted your account. Thanks for using V's banking"
+        return f"You successfully deleted your account. Thanks for using V's banking, {user.name}"
     
 
 from bankapp.schemas.account_schema import AccountSchema
+
+
+"""
+        user = UserModel.query.get_or_404(self.user_id, "You do not exist, please try again")
+        db.session.delete(user)
+        db.session.commit()
+        return f"bye bye {user.name}"
+
+"""

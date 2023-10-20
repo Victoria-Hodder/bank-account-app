@@ -70,6 +70,6 @@ def accounts():
 def open_account():
     return AccountService().open_account()
 
-@app.route('/accounts/<int:account_id>/close_account', methods= ['DELETE'])
-def close_account(account_id):
-    return AccountService(account_id).close_account()
+@app.route('/users/<int:user_id>/accounts/<int:account_id>/close_account', methods= ['DELETE'])
+def close_account(account_id, user_id):
+    return AccountService(account_id, user_id).close_account()
