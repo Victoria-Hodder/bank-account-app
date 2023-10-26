@@ -1,4 +1,5 @@
 from bankapp import db
+from bankapp.models.account_model import AccountModel
 from .user import User
 from flask import request, jsonify, abort
 
@@ -7,7 +8,7 @@ from flask import request, jsonify, abort
 
 class Transactions(User):
     
-    def withdraw(self):
+    def withdraw(self, account_id):
         data = request.get_json(force=True)
         amount = data['amount']
         pin = data['pin']
@@ -15,12 +16,13 @@ class Transactions(User):
             abort(400, description='You are not allowed to go over 2000 euro daily limit') 
         else:
             user = User.query.get_or_404(self.user_id, "User does not exist")
+            account = AccountModel.query.get_or_404(account_id, "Account does not exist")
             if pin == user.pin: 
-                if amount <= user.balance:
-                    user.balance -= amount
+                if amount <= account.balance:
+                    account.balance -= amount
                     db.session.commit()
-                    user_schema = UserSchema()
-                    response = user_schema.dump(user)
+                    account_schema = AccountSchema()
+                    response = account_schema.dump(account)
                     return jsonify(response)       
                 else:
                     abort(
@@ -30,7 +32,7 @@ class Transactions(User):
             else:
                 abort(400, description="Pin is not correct")
 
-    def deposit(self):
+    def deposit(self, account_id):
         data = request.get_json(force=True)
         amount = data['amount']
         pin = data['pin']
@@ -38,38 +40,41 @@ class Transactions(User):
             abort(400, description='You are not allowed to go over 3000 euro daily limit') 
         else:
             user = User.query.get_or_404(self.user_id, "User does not exist")
+            account = AccountModel.query.get_or_404(account_id, "Account does not exist")
             if pin == user.pin:
-                user.balance += amount
+                account.balance += amount
                 db.session.commit()
-                user_schema = UserSchema()
-                response = user_schema.dump(user)
+                account_schema = AccountSchema()
+                response = account_schema.dump(account)
                 return jsonify(response)
             else:
                 abort(400, description="Pin is not correct")
 
-    def transfer(self):
+    def transfer(self, account_id):
         data = request.get_json(force=True)
         amount = data["amount"]
-        pin_number = data["pin"]
-        receiver_id = data["receiverId"]
+        pin = data["pin"]
+        destination_acc_id = data["destination account"]
+        # Amount check
         if amount > 3000:
             abort(400, description='You are not allowed to go over 3000 euro daily limit') 
+        # pin check
         else:
-            sender = User.query.get_or_404(self.user_id, "Sender does not exist")
-            if pin_number == sender.pin:
-                if amount <= sender.balance:
-                    receiver = User.query.get_or_404(receiver_id, "Receiver user does not exist")
-                    sender.balance -= amount
-                    receiver.balance += amount
+            user = User.query.get_or_404(self.user_id, "User does not exist")
+            account = AccountModel.query.get_or_404(account_id, "Source account does not exist")
+            destination_acc = AccountModel.query.get_or_404(destination_acc_id, "Destination account does not exist")
+            if pin == user.pin:
+                if account != destination_acc:
+                    account.balance -= amount
+                    destination_acc.balance += amount
                     db.session.commit()
-                    user_schema = UserSchema()
-                    response = user_schema.dump(receiver)
+                    account_schema = AccountSchema()
+                    response = account_schema.dump(destination_acc)
                     return jsonify(response)
                 else:
-                    abort(400, description='You dont have enought amount of money in your acount!')
+                    abort(400, description="Destination account must differ from source account")
             else:
                 abort(400, description="Pin is not correct")
+                
 
-
-
-from bankapp.schemas.user_schema import UserSchema
+from bankapp.schemas.account_schema import AccountSchema
