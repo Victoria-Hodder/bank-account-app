@@ -49,7 +49,8 @@ class AccountService:
     def open_account(self, user_id):
         user = UserModel.query.get_or_404(user_id, "You do not exist, please try again")
         data = request.get_json(force=True)
-        new_account = data ['account name']
+        new_account = data['account type']
+        new_balance = data['balance']
         user_pin = data['pin']
 
         if user_pin == user.pin:
@@ -59,7 +60,7 @@ class AccountService:
                 if (new_account.lower() != 'current') and (new_account.lower() != 'savings'):
                     abort(400, description="There are only two valid account types: savings or current.")
                 else:
-                    new_account = AccountModel(account_name=new_account, user_id=user_id)
+                    new_account = AccountModel(account_type=new_account, balance=new_balance, user_id=user_id)
                     db.session.add(new_account)
                     db.session.commit()
                     user_schema = AccountSchema()

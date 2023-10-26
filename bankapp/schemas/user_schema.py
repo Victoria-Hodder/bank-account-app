@@ -10,5 +10,4 @@ class UserSchema(ma.SQLAlchemySchema):
     name = ma.auto_field()
     address = ma.auto_field()
     pin = ma.auto_field()
-    balance = ma.auto_field()
     accounts = ma.auto_field()

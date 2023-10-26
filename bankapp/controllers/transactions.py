@@ -3,7 +3,7 @@ from .user import User
 from flask import request, jsonify, abort
 
 
-# TODO: Need to specify which account to interact with
+# TODO: Change to use AccountModel (balance is now there)
 
 class Transactions(User):
     
