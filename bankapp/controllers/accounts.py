@@ -37,10 +37,8 @@ class AccountService:
         user = UserModel.query.get_or_404(user_id, "You do not exist, please try again")
         accounts = AccountModel.query.all()
 
-        user_accounts = []
-        for account in accounts:
-            if account.user_id == user.id:
-                user_accounts.append(account)
+        user_accounts = [account for account in accounts
+                         if account.user_id == user.id]
 
         account_schema = AccountSchema(many=True)
         response = account_schema.dump(user_accounts)
