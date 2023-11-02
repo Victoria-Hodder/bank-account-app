@@ -4,8 +4,7 @@ from .user import User
 from flask import request, jsonify, abort
 
 
-# TODO: Change to use AccountModel (balance is now there)
-
+# TODO: play with inheriting from AccountService (instead of User)
 class Transactions(User):
     
     def withdraw(self, account_id):

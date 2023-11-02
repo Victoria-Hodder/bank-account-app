@@ -20,7 +20,6 @@ from bankapp import db
 from bankapp.models.account_model import AccountModel
 from flask import jsonify, abort, request
 from bankapp.models.user_model import UserModel
-from bankapp.schemas.user_schema import UserSchema
 
 class AccountService:
 
@@ -61,6 +60,7 @@ class AccountService:
                     new_account = AccountModel(account_type=new_account, balance=new_balance, user_id=user_id)
                     db.session.add(new_account)
                     db.session.commit()
+                    # TODO: account_schema
                     user_schema = AccountSchema()
                     response = user_schema.dump(new_account)
                     return jsonify(response)

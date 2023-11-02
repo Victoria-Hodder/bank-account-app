@@ -54,7 +54,6 @@ Then enter a json body (for example)...
     "name": "Maya",
     "address": "North Street, Glasgow"
     "pin": "9876",
-    "balance": 2500
 }
 ```
 
