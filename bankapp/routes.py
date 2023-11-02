@@ -1,5 +1,6 @@
 from bankapp import app
 from bankapp.controllers.current_account import Current
+from bankapp.controllers.savings_account import Savings
 from .controllers.user import User
 from .controllers.user_details import UserService
 from .controllers.transactions import Transactions
@@ -68,6 +69,10 @@ def close_account(account_id, user_id):
 @app.route('/users/<int:user_id>/accounts/<int:account_id>/apply_charge', methods=['PUT'])
 def apply_charge(account_id, user_id):
     return Current(account_id).apply_charge(user_id)
+
+@app.route('/users/<int:user_id>/accounts/<int:account_id>/add_interest', methods=['PUT'])
+def add_interest(account_id, user_id):
+    return Savings(account_id).add_interest(user_id)
 
 
 # Routes associated with TRANSACTIONS
