@@ -46,6 +46,7 @@ class AccountService:
     def open_account(self, user_id):
         user = UserModel.query.get_or_404(user_id, "You do not exist, please try again")
         data = request.get_json(force=True)
+        new_account = data['account type']
         new_balance = data['balance']
         user_pin = data['pin']
 
