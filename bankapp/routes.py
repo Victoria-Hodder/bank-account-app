@@ -57,6 +57,10 @@ def get_user_accounts(user_id):
 def open_account(user_id):
     return AccountService().open_account(user_id)
 
+@app.route('/users/<int:user_id>/accounts/current/open_account', methods= ['POST'])
+def open_current_account(user_id):
+    return Current().open_account(user_id)
+
 @app.route('/users/<int:user_id>/accounts/<int:account_id>/close_account', methods= ['DELETE'])
 def close_account(account_id, user_id):
     return AccountService(account_id).close_account(user_id)
@@ -78,4 +82,3 @@ def deposit(user_id, account_id):
 @app.route('/users/<int:user_id>/accounts/<int:account_id>/move_my_money', methods=['PUT'])
 def transfer(user_id, account_id):
     return Transactions(user_id).transfer(account_id)
-
