@@ -12,17 +12,23 @@ class Savings(AccountService):
     def add_interest(self, user_id):
         user = UserModel.query.get_or_404(user_id, "You do not exist, please try again")
         account = AccountModel.query.get_or_404(self.account_id, "You cannot select an account which does not exist")
-        if user_id == account.user_id:
-            if account.account_type == 'savings':
-                account.balance = account.balance * 1.10
-                db.session.commit()
-                account_schema = AccountSchema()
-                response = account_schema.dump(account)
-                return jsonify(response)
+        data = request.get_json(force=True)
+        pin_check = data['admin pin']
+        
+        if pin_check == AccountService.admin_pin:
+            if user_id == account.user_id:
+                if account.account_type == 'savings':
+                    account.balance = account.balance * 1.10
+                    db.session.commit()
+                    account_schema = AccountSchema()
+                    response = account_schema.dump(account)
+                    return jsonify(response)
+                else:
+                    return abort(400, description="You can only add interest to a savings account")
             else:
-                return abort(400, description="You can only add interest to a savings account")
+                return abort(400, description="user id and account id must match")
         else:
-            return abort(400, description="user id and account id must match")
+            return abort(400, description="you cannot add interest if you are not admin :P")    
         
 
 from bankapp.schemas.account_schema import AccountSchema

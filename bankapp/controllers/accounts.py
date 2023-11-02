@@ -23,6 +23,8 @@ from bankapp.models.user_model import UserModel
 
 class AccountService:
 
+    admin_pin = '100122133'
+
     def __init__(self, account_id=None):
         self.account_id = account_id
 
