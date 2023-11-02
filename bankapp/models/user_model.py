@@ -7,10 +7,8 @@ class UserModel(db.Model):
     name = db.Column(db.String(10), unique=True)
     address = db.Column(db.String(40), nullable=False)
     pin = db.Column(db.String(4), nullable=False)
-    balance = db.Column(db.Integer)
-    # TODO: rename to account_id
     accounts = db.relationship('AccountModel', backref='user_account', lazy='dynamic')
 
     def __repr__(self):
-        return f"UserModel(name='{self.name}', pin='{self.pin}', balance='{self.balance}', address='{self.address})"
+        return f"UserModel(id={self.id},\n name='{self.name}',\n pin='{self.pin}',\n address='{self.address}),\n accounts={self.accounts}\n"
 

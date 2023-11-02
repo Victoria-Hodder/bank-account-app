@@ -37,6 +37,10 @@ Now you have the Python environment ready, you can set up flask in the following
 Once your app is running successfully, you should be able to access it on your browser at: http://127.0.0.1:5000
 
 
+### Fun Fact:
+If you don't want to set the environment variables manually every time, it's worth looking into [python-dotenv](https://pypi.org/project/python-dotenv/) (just be sure not to commit anything private to the repo ;) )
+
+
 ## Testing the endpoints
 
 Though you can use the browser, I used postman to test the different http requests. This way it is much easier to swap between different methods.
@@ -50,7 +54,6 @@ Then enter a json body (for example)...
     "name": "Maya",
     "address": "North Street, Glasgow"
     "pin": "9876",
-    "balance": 2500
 }
 ```
 

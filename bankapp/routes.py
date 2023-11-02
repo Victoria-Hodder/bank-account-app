@@ -45,19 +45,18 @@ def update_user_pin(user_id):
 
 
 # Routes associated with TRANSACTIONS
-@app.route('/users/<int:user_id>/withdraw', methods=['PUT'])
-def withdraw(user_id):
-    return Transactions(user_id).withdraw()
+@app.route('/users/<int:user_id>/accounts/<int:account_id>/withdraw', methods=['PUT'])
+def withdraw(user_id, account_id):
+    return Transactions(user_id).withdraw(account_id)
 
 
-@app.route('/users/<int:user_id>/deposit', methods=['PUT'])
-def deposit(user_id):
-    return Transactions(user_id).deposit()
+@app.route('/users/<int:user_id>/accounts/<int:account_id>/deposit', methods=['PUT'])
+def deposit(user_id, account_id):
+    return Transactions(user_id).deposit(account_id)
 
-
-@app.route('/users/<int:user_id>/transfer', methods=['PUT'])
-def transfer(user_id):
-    return Transactions(user_id).transfer()
+@app.route('/users/<int:user_id>/accounts/<int:account_id>/move_my_money', methods=['PUT'])
+def transfer(user_id, account_id):
+    return Transactions(user_id).transfer(account_id)
 
 
 
