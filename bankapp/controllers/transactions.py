@@ -4,7 +4,7 @@ from .user import User
 from flask import request, jsonify, abort
 
 
-# TODO: play with inheriting from AccountService (instead of User)
+# TODO: maybe play with inheriting from AccountService (instead of User)
 class Transactions(User):
     
     def withdraw(self, account_id):
