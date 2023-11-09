@@ -54,17 +54,13 @@ def get_accounts():
 def get_user_accounts(user_id):
     return AccountService().get_user_accounts(user_id)
 
-@app.route('/users/<int:user_id>/accounts/open_account', methods= ['POST'])
-def open_account(user_id):
-    return AccountService().open_account(user_id)
-
 @app.route('/users/<int:user_id>/accounts/current/open_account', methods= ['POST'])
 def open_current_account(user_id):
-    return Current().open_account(user_id)
+    return Current().open_account(user_id, account_type = 'current')
 
-@app.route('/users/<int:user_id>/accounts/<int:account_id>/close_account', methods= ['DELETE'])
-def close_account(account_id, user_id):
-    return AccountService(account_id).close_account(user_id)
+@app.route('/users/<int:user_id>/accounts/savings/open_account', methods= ['POST'])
+def open_savings_account(user_id):
+    return Savings().open_account(user_id, account_type = 'savings')
 
 @app.route('/users/<int:user_id>/accounts/<int:account_id>/apply_charge', methods=['PUT'])
 def apply_charge(account_id, user_id):
@@ -73,6 +69,12 @@ def apply_charge(account_id, user_id):
 @app.route('/users/<int:user_id>/accounts/<int:account_id>/add_interest', methods=['PUT'])
 def add_interest(account_id, user_id):
     return Savings(account_id).add_interest(user_id)
+
+@app.route('/users/<int:user_id>/accounts/<int:account_id>/close_account', methods= ['DELETE'])
+def close_account(account_id, user_id):
+    return AccountService(account_id).close_account(user_id)
+
+
 
 
 # Routes associated with TRANSACTIONS

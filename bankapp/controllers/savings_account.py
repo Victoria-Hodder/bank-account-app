@@ -10,6 +10,7 @@ class Savings(AccountService):
         super().__init__(account_id)
 
     def add_interest(self, user_id):
+        # Though the user variable is not used in this code, it is required as a user check when testing the endpoint
         user = UserModel.query.get_or_404(user_id, "You do not exist, please try again")
         account = AccountModel.query.get_or_404(self.account_id, "You cannot select an account which does not exist")
         data = request.get_json(force=True)
