@@ -1,5 +1,6 @@
 from bankapp import db
 from bankapp.models.account_model import AccountModel
+from bankapp.models.user_model import UserModel
 from .user import User
 from flask import request, jsonify, abort
 
@@ -14,7 +15,7 @@ class Transactions(User):
         if amount > 2000:
             abort(400, description='You are not allowed to go over 2000 euro daily limit') 
         else:
-            user = User.query.get_or_404(self.user_id, "User does not exist")
+            user = UserModel.query.get_or_404(self.user_id, "User does not exist")
             account = AccountModel.query.get_or_404(account_id, "Account does not exist")
             if pin == user.pin: 
                 if amount <= account.balance:
@@ -38,7 +39,7 @@ class Transactions(User):
         if amount >= 3000:
             abort(400, description='You are not allowed to go over 3000 euro daily limit') 
         else:
-            user = User.query.get_or_404(self.user_id, "User does not exist")
+            user = UserModel.query.get_or_404(self.user_id, "User does not exist")
             account = AccountModel.query.get_or_404(account_id, "Account does not exist")
             if pin == user.pin:
                 account.balance += amount
@@ -59,7 +60,7 @@ class Transactions(User):
             abort(400, description='You are not allowed to go over 3000 euro daily limit') 
         # pin check
         else:
-            user = User.query.get_or_404(self.user_id, "User does not exist")
+            user = UserModel.query.get_or_404(self.user_id, "User does not exist")
             account = AccountModel.query.get_or_404(account_id, "Source account does not exist")
             destination_acc = AccountModel.query.get_or_404(destination_acc_id, "Destination account does not exist")
             if pin == user.pin:

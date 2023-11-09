@@ -1,4 +1,5 @@
 from bankapp import db
+from bankapp.models.user_model import UserModel
 from .user import User
 from flask import jsonify, request, abort
 
@@ -6,7 +7,7 @@ class UserService(User):
 
     def update(self):
         data = request.get_json(force=True)
-        user = User.query.get_or_404(self.user_id)
+        user = UserModel.query.get_or_404(self.user_id)
 
         json_keys = [key for key in data.keys()]
         
@@ -28,7 +29,7 @@ class UserService(User):
         data = request.get_json(force=True)
         current_pin = data['pin']
         new_pin = data['new pin']
-        user = User.query.get_or_404(self.user_id)
+        user = UserModel.query.get_or_404(self.user_id)
         
         if current_pin == user.pin:
             user.pin = new_pin
