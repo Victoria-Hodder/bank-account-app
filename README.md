@@ -38,7 +38,7 @@ Once your app is running successfully, you should be able to access it on your b
 
 
 ### Fun Fact:
-If you don't want to set the environment variables manually every time, it's worth looking into [python-dotenv](https://pypi.org/project/python-dotenv/) (just be sure not to commit anything private to the repo ;) )
+If you don't want to set the environment variables manually every time, it's worth looking into [python-dotenv](https://pypi.org/project/python-dotenv/) (just be sure not to commit anything private to the repo ;))
 
 
 ## Testing the endpoints
@@ -63,4 +63,6 @@ You can download and learn more about postman here https://www.postman.com/
 
 ## Testing the app
 
-... Documentation to follow ...
+I use unittest to test the app. You can run them with the following command within the project directory:
+
+`python3 -m unittest bankapp/tests/*.py`
