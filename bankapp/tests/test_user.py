@@ -8,19 +8,6 @@ from bankapp.tests.test_base import TestBase
 
 class TestUser(TestBase):
 
-        def test_create_user(self):
-            mock_request_data = {
-                'name': 'Queen Sloth',
-                'address': 'Best tree ever',
-                'pin': '2345'
-            }
-            response = self.client.post('/users', data=json.dumps(mock_request_data))
-            data = json.loads(response.get_data(as_text=True))
-            self.assertEqual(response.status_code,200)
-            self.assertEqual(data['name'], 'Queen Sloth')
-            self.assertEqual(data['address'], 'Best tree ever')
-            self.assertEqual(data['pin'], '2345')
-
         def test_get_users(self):
             mock_user = self.create_user()
             response = self.client.get('/users')
@@ -39,12 +26,24 @@ class TestUser(TestBase):
             self.assertEqual(data['address'], mock_user.address)
             self.assertEqual(data['pin'], mock_user.pin)
 
-        # NEW today
         def test_get_users_by_id_404(self):
             mock_user = self.create_user()
             response = self.client.get(f'/users/{mock_user.id+1}')
             self.assertEqual(response.status_code,404)
         
+        def test_create_user(self):
+            mock_request_data = {
+                'name': 'Queen Sloth',
+                'address': 'Best tree ever',
+                'pin': '2345'
+            }
+            response = self.client.post('/users', data=json.dumps(mock_request_data))
+            data = json.loads(response.get_data(as_text=True))
+            self.assertEqual(response.status_code,200)
+            self.assertEqual(data['name'], 'Queen Sloth')
+            self.assertEqual(data['address'], 'Best tree ever')
+            self.assertEqual(data['pin'], '2345')
+
         def test_delete_user(self):
             mock_user = self.create_user()        
             response = self.client.delete(f'/users/{mock_user.id}')        
@@ -59,8 +58,3 @@ class TestUser(TestBase):
             mock_user = self.create_user()
             response = self.client.get(f'/users/{mock_user.id+1}')
             self.assertEqual(response.status_code,404)
-
-
-
-if __name__ == '__main__':
-    unittest.main()   

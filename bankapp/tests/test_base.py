@@ -2,6 +2,7 @@ from bankapp import app, db
 import unittest
 
 from bankapp.models.user_model import UserModel
+from bankapp.models.account_model import AccountModel
 
 
 # Run in this way
@@ -29,4 +30,16 @@ class TestBase(unittest.TestCase):
             db.session.add(user)
             db.session.commit()
             return user
+        
+        def create_second_user(self):
+            user=UserModel(name='Katrin Schmidt', address='10 Frankfurter Allee',pin='8765')
+            db.session.add(user)
+            db.session.commit()
+            return user
+        
+        def create_current_account(self):
+            account=AccountModel(account_type='current', balance=100, user_id=1)
+            db.session.add(account)
+            db.session.commit()
+            return account
         
