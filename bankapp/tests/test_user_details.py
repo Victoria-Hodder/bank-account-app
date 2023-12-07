@@ -40,5 +40,4 @@ class TestUser(TestBase):
             'new pin': '4568'            
         }
         response = self.client.put(f'/users/{mock_user.id}/update_pin', data=json.dumps(mock_update_data))
-        data = response.get_data(as_text=True)
         self.assertEqual(response.status_code,400)
