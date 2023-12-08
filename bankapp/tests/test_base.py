@@ -34,25 +34,25 @@ class TestBase(unittest.TestCase):
     
     # Mock data
     def create_user(self):
-        user=UserModel(name='Bob cat', address='12 Edward Place',pin='1234')
+        user=UserModel(id=1, name='Bob cat', address='12 Edward Place',pin='1234')
         db.session.add(user)
         db.session.commit()
         return user
     
     def create_second_user(self):
-        user=UserModel(name='Katrin Schmidt', address='10 Frankfurter Allee',pin='8765')
+        user=UserModel(id=2, name='Katrin Schmidt', address='10 Frankfurter Allee',pin='8765')
         db.session.add(user)
         db.session.commit()
         return user
     
     def create_current_account(self):
-        account=AccountModel(account_type='current', balance=100, user_id=1)
+        account=AccountModel(id=1, account_type='current', balance=100, user_id=1)
         db.session.add(account)
         db.session.commit()
         return account
     
     def create_savings_account(self):
-        account=AccountModel(account_type='savings', balance=200, user_id=2)
+        account=AccountModel(id=2, account_type='savings', balance=200, user_id=2)
         db.session.add(account)
         db.session.commit()
         return account

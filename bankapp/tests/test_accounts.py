@@ -92,8 +92,12 @@ class TestAccounts(TestBase):
     def test_add_interest(self):
         mock_user = self.create_second_user()
         mock_account = self.create_savings_account()
+        print(mock_user)
+        print(mock_account)
         response = self.client.put(f'/users/{mock_user.id}/accounts/{mock_account.id}/add_interest',
                                    data=json.dumps(self.test_admin_pin))
+        print(response.text)
         data = json.loads(response.get_data(as_text=True))
+        print(data)
         self.assertEqual(response.status_code,200)
         self.assertEqual(data['balance'], round(mock_account.balance))
