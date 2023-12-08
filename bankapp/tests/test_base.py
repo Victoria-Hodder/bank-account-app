@@ -51,3 +51,8 @@ class TestBase(unittest.TestCase):
         db.session.commit()
         return account
     
+    def create_savings_account(self):
+        account=AccountModel(account_type='savings', balance=200, user_id=1)
+        db.session.add(account)
+        db.session.commit()
+        return account
