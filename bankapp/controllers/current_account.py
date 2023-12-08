@@ -15,7 +15,7 @@ class Current(AccountService):
         data = request.get_json(force=True)
         pin_check = data['admin pin']
         
-        if pin_check == AccountService.admin_pin:
+        if pin_check == AccountService.ADMIN_PIN:
             if user_id == account.user_id:
                 if account.account_type == 'current':
                     account.balance = account.balance - 5

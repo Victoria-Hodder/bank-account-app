@@ -1,5 +1,4 @@
 from bankapp import app, db
-import unittest
 import json
 
 from bankapp.models.account_model import AccountModel
