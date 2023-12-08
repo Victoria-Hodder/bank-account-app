@@ -10,6 +10,12 @@ from bankapp.models.account_model import AccountModel
 
 class TestBase(unittest.TestCase):
         
+        # Ensure this has the same value as admin pin used in the app
+        # bankapp/controllers/accounts.py
+        test_admin_pin = {
+            "admin pin": "9876"
+        }
+        
         def setUp(self):
             app.config['TESTING']=True
             app.config['DEBUG']=False

@@ -6,7 +6,8 @@ from bankapp.models.account_model import AccountModel
 from bankapp.tests.test_base import TestBase
 
 
-# Currently only "current" account type is being tested
+# Currently primarily "current" account type is being tested
+# Eventually this file could be split according to the account types (current, savings)
 
 class TestAccounts(TestBase):
 
@@ -71,5 +72,15 @@ class TestAccounts(TestBase):
         self.assertEqual(response.status_code,404)
 
     # test apply charge
+    def test_apply_charge(self):
+        mock_user = self.create_user()
+        mock_account = self.create_current_account()
+        response = self.client.put(f'/users/{mock_user.id}/accounts/{mock_account.id}/apply_charge',
+                                   data=json.dumps(self.test_admin_pin))
+        data = json.loads(response.get_data(as_text=True))
+        self.assertEqual(response.status_code,200)
+        # Check balance has been updated with charge applied
+        self.assertEqual(data['balance'], mock_account.balance)
+
 
     # test add interest

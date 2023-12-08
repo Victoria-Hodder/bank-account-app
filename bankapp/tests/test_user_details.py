@@ -2,13 +2,10 @@ from bankapp import app, db
 import unittest
 import json
 
-from bankapp.models.user_model import UserModel
 from bankapp.tests.test_base import TestBase
 
 
-# Run in this way
-# python3 -m unittest bankapp/tests/*.py
-class TestUser(TestBase):        
+class TestUserDetails(TestBase):        
 
     def test_update_user(self):
         mock_user = self.create_user()

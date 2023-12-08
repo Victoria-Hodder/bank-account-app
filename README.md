@@ -66,3 +66,7 @@ You can download and learn more about postman here https://www.postman.com/
 I use unittest to test the app. You can run them with the following command within the project directory:
 
 `python3 -m unittest bankapp/tests/*.py`
+
+If you wish to run a single test file you can simply replace `*.py` with the name of the file. For example:
+
+`python3 -m unittest bankapp/tests/test_user.py`
