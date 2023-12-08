@@ -77,10 +77,8 @@ class TestAccounts(TestBase):
                                    data=json.dumps(self.test_admin_pin))
         data = json.loads(response.get_data(as_text=True))
         self.assertEqual(response.status_code,200)
-        # Check balance has been updated with charge applied
         self.assertEqual(data['balance'], mock_account.balance)
 
-    # apply charge wrong admin pin
     def test_apply_charge_wrong_admin_pin(self):
         wrong_pin = {
             "admin pin": 2345
@@ -92,7 +90,7 @@ class TestAccounts(TestBase):
         self.assertEqual(response.status_code,400)
 
     def test_add_interest(self):
-        mock_user = self.create_user()
+        mock_user = self.create_second_user()
         mock_account = self.create_savings_account()
         response = self.client.put(f'/users/{mock_user.id}/accounts/{mock_account.id}/add_interest',
                                    data=json.dumps(self.test_admin_pin))

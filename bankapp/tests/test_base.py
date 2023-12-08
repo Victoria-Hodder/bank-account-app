@@ -30,7 +30,7 @@ class TestBase(unittest.TestCase):
         self.assertEqual(app.debug,False)
 
     def tearDown(self):
-        pass
+        db.session.commit()
     
     # Mock data
     def create_user(self):
@@ -52,7 +52,8 @@ class TestBase(unittest.TestCase):
         return account
     
     def create_savings_account(self):
-        account=AccountModel(account_type='savings', balance=200, user_id=1)
+        account=AccountModel(account_type='savings', balance=200, user_id=2)
         db.session.add(account)
         db.session.commit()
         return account
+    
