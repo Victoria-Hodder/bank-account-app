@@ -4,6 +4,7 @@ import json
 from bankapp.models.account_model import AccountModel
 from bankapp.tests.test_base import TestBase
 
+
 """
 Here I test functionality that applies to both account types (savings 
 and current): namely getting all accounts and closing an account.
@@ -20,22 +21,23 @@ Why?
 - To test specific accounts can be called
 - When opening an account, the URL and expected behaviour differs slightly 
 between the two account types
+
 """
 
 
 class TestAccounts(TestBase):
 
     def test_get_accounts(self):
-        mock_account = self.create_current_account()
+        mock_current_account = self.create_current_account()
         mock_savings_account = self.create_savings_account()
         response = self.client.get(f'/accounts')
         data = json.loads(response.get_data(as_text=True))
         self.assertEqual(response.status_code,200)
-
-        self.assertEqual(data[0]['account_type'], mock_account.account_type)
-        self.assertEqual(data[0]['balance'], mock_account.balance)
-        self.assertEqual(data[0]['user_id'], mock_account.user_id)
-
+        # Test current account is listed
+        self.assertEqual(data[0]['account_type'], mock_current_account.account_type)
+        self.assertEqual(data[0]['balance'], mock_current_account.balance)
+        self.assertEqual(data[0]['user_id'], mock_current_account.user_id)
+        # Test savings account is listed
         self.assertEqual(data[1]['account_type'], mock_savings_account.account_type)
         self.assertEqual(data[1]['balance'], mock_savings_account.balance)
         self.assertEqual(data[1]['user_id'], mock_savings_account.user_id)

@@ -65,4 +65,3 @@ class TestCurrentAccounts(TestBase):
         response = self.client.put(f'/users/{mock_user.id}/accounts/{mock_account.id}/apply_charge',
                                    data=json.dumps(wrong_pin))
         self.assertEqual(response.status_code,400)
-
