@@ -1,13 +1,16 @@
+import os
+from flask import jsonify, abort, request
+from dotenv import load_dotenv
 
 from bankapp import db
 from bankapp.models.account_model import AccountModel
-from flask import jsonify, abort, request
 from bankapp.models.user_model import UserModel
+
 
 class AccountService:
 
-    # Insert your very own admin pin here
-    admin_pin = ''
+    load_dotenv()
+    ADMIN_PIN = os.getenv('ADMIN_PIN')
 
     def __init__(self, account_id=None):
         self.account_id = account_id

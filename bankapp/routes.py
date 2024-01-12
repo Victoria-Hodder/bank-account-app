@@ -75,8 +75,6 @@ def close_account(account_id, user_id):
     return AccountService(account_id).close_account(user_id)
 
 
-
-
 # Routes associated with TRANSACTIONS
 @app.route('/users/<int:user_id>/accounts/<int:account_id>/withdraw', methods=['PUT'])
 def withdraw(user_id, account_id):
