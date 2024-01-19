@@ -70,3 +70,15 @@ I use unittest to test the app. You can run them with the following command with
 If you wish to run a single test file you can simply replace `*.py` with the name of the file. For example:
 
 `python3 -m unittest bankapp/tests/test_user.py`
+
+## Running on Docker
+
+There is also the possibility to run this project on Docker if you prefer to do that.
+
+To run, simply, run:
+
+```
+(bank) ~/your_workspace$ docker build --tag <tag-name-of-your-choice> .
+(bank) ~/your_workspace$ sudo docker run -p 5000:5000 <tag-name-of-your-choice>
+
+```
