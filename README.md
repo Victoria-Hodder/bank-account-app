@@ -70,3 +70,44 @@ I use unittest to test the app. You can run them with the following command with
 If you wish to run a single test file you can simply replace `*.py` with the name of the file. For example:
 
 `python3 -m unittest bankapp/tests/test_user.py`
+
+## Running on Docker
+
+There is also the possibility to run this project on Docker if you prefer to do that.
+
+To run, simply, run:
+
+```
+(bank) ~/your_workspace$ docker build --tag <tag-name-of-your-choice> .
+(bank) ~/your_workspace$ docker run -p 5000:5000 <tag-name-of-your-choice>
+
+# To stop your Docker container running ctrl+c usually suffices but you can 
+# double check if any instances are still active by running...
+(bank) ~/your_workspace$ docker ps
+
+# You can clean up your space after stopping with:
+(bank) ~/your_workspace$ docker container prune
+
+```
+
+### Fun fact:
+If you are having `permission denied` issues connecting to Docker on your machine (like I do), start all your docker commands with `sudo`. Usually helps.
+
+## Running tests on Docker
+
+Once the container is running, find out its name using `docker ps`. 
+
+The name can be found under NAMES - usually the last column.
+
+Then run:
+
+`docker exec -i <container-name> python3 -m unittest bankapp/tests/*.py`
+
+
+## Room for improvement with Docker
+
+I would like to explore the possibility of:
+- defining a custom container name from the beginning.
+- creating a separate Dockerfile for the Tests directory and run the project using docker-compose.
+
+Watch this space.
